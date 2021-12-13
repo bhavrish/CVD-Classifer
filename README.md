@@ -9,7 +9,7 @@ Table of contents
 
 <!--ts-->
    * Data
-      * Cluster-wise data (0-8)
+      * Cluster-wise data (0-5)
       * Entire dataset
    * Exploratory Data Analysis
    * ML (Models)
