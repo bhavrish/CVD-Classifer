@@ -1,6 +1,6 @@
 # Cardiovascular Disease (CVD) Classifier
 
-Final project for DSCI 303: Machine Learning for Data Science
+Final project for Rice University's DSCI 303: Machine Learning for Data Science
 
 Team Members: Bhavesh Shah, [Griffin Coccari](https://github.com/coccarig8), [Jamie Chen](https://github.com/jlfchen)
 
@@ -12,7 +12,11 @@ Table of contents
       * Cluster-wise data (0-5)
       * Entire dataset
    * Exploratory Data Analysis
-   * ML (Models)
+        * Feature Analysis
+        * Observation Analysis
+        * Anova F-Test
+        * PCA
+   * Models
       * Clustering
         * K-Means
         * GMM
@@ -21,5 +25,22 @@ Table of contents
         * SVM
         * KNN
         * Random Forests
-        * Neural Nets
+        * Neural Nets (3 different architectures)
+   * Results
+      * Final Paper
+      * Final Presentation
+      * EDA Presentationi
+   * Web App
+      * Frontend
+      * API
+      * Final Models (serialized)
+
+Model Performances
+=================
+![Accuracies](https://github.com/bhavrish/CVD-Classifer/blob/main/Accuracies.png)
+
+Pipeline Architecture
+=================
+![Pipeline](https://github.com/bhavrish/CVD-Classifer/blob/main/CVD%20Predictor%20Architecture.png)
+
 <!--te-->
