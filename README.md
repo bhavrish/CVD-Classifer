@@ -21,4 +21,5 @@ Table of contents
         * SVM
         * KNN
         * Random Forests
+        * Neural Nets
 <!--te-->
