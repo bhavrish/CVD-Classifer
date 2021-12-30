@@ -20,19 +20,19 @@ app.add_middleware(
 )
 
 # Retrieve and deserialize all models
-kmeans_model = pickle.load(open('../Final Models/Kmeans.pkl', 'rb'))
-cluster0_model = pickle.load(open('../Final Models/Cluster0_SVM.pkl', 'rb'))
-cluster1_model = pickle.load(open('../Final Models/Cluster1_SVM.pkl', 'rb'))
-cluster2_model = pickle.load(open('../Final Models/Cluster2_SVM.pkl', 'rb'))
-cluster3_model = pickle.load(open('../Final Models/Cluster3_SVM.pkl', 'rb'))
-cluster6_model = pickle.load(open('../Final Models/Cluster6_SVM.pkl', 'rb'))
-cluster7_model = pickle.load(open('../Final Models/Cluster7_SVM.pkl', 'rb'))
+kmeans_model = pickle.load(open('../Final Models/Kmeans_pipeline.pkl', 'rb'))
+cluster0_model = pickle.load(open('../Final Models/Cluster_0_logreg_pipeline.pkl', 'rb'))
+cluster1_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb')) # TODO
+cluster2_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb'))
+cluster3_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb')) # TODO
+cluster4_model = pickle.load(open('../Final Models/Cluster_4_logreg_pipeline.pkl', 'rb'))
+cluster5_model = pickle.load(open('../Final Models/Cluster_5_RF_pipeline.pkl', 'rb'))
 
 # Defining the model input types
 class Patient(BaseModel):
     age: int
     gender: int
-    height: int
+    height: float
     weight: float
     ap_hi: int
     ap_low: int
@@ -42,6 +42,21 @@ class Patient(BaseModel):
     alco: int
     active: int
 
+# Map cluster to previous arrangement
+def map_cluster(cluster):
+    if cluster == 0:
+        return 0
+    elif cluster == 1:
+        return 3
+    elif cluster == 2:
+        return 4
+    elif cluster == 3:
+        return 5
+    elif cluster == 4:
+        return 1
+    elif cluster == 5:
+        return 2
+    
 
 # Setting up the home route
 @app.get("/")
@@ -66,23 +81,21 @@ async def get_predict(data: Patient):
     ]]
 
     descriptions = [
-        "high cholesterol",
-        "lowest cvd%, youngest; third largest cluster",
-        "pure smokers (no alcohol)",
-        "high glucose, high cholesterol",
-        "highest cvd%, high blood pressure; smallest cluster",
-        "alcoholics, some smokers",
-        "more male; “majority” (second largest) cluster",
-        "not active at all; fourth largest cluster",
-        "more female; “majority” (largest) cluster"
+        "high blood pressure, older crowd, majority female, shortest",
+        "high glucose, high cholesterol, older crowd",
+        "alcoholics, some smokers; smallest cluster",
+        "smokers, majority male",
+        "majority male, tallest",
+        "almost completely female, shortest, lightest; largest cluster"
     ]
-
-    print("testing...")
 
     # Step 1) Figure out which cluster patient belongs to
     cluster = kmeans_model.predict(health_history).tolist()[0]
 
-    # Step 2) Run prediction model based on which cluster patient belongs to
+    # Step 2) Perform cluster mappings
+    cluster = map_cluster(cluster)
+
+    # Step 3) Run prediction model based on which cluster patient belongs to
     atRisk = 0
 
     if cluster == 0:
@@ -96,12 +109,6 @@ async def get_predict(data: Patient):
     elif cluster == 4:
         atRisk = cluster2_model.predict(health_history).tolist()[0] # TODO
     elif cluster == 5:
-        atRisk = cluster2_model.predict(health_history).tolist()[0] # TODO
-    elif cluster == 6:
-        atRisk = cluster6_model.predict(health_history).tolist()[0]
-    elif cluster == 7:
-        atRisk = cluster7_model.predict(health_history).tolist()[0]
-    elif cluster == 8:
         atRisk = cluster2_model.predict(health_history).tolist()[0] # TODO
 
     return {
