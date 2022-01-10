@@ -3,6 +3,8 @@ import pickle
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
+import os
 
 # Basic API configurations
 app = FastAPI()
@@ -14,16 +16,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+dir_path = Path(__file__).parent
+
 # Retrieve and deserialize all models
-kmeans_model = pickle.load(open('../Final Models/Kmeans_pipeline.pkl', 'rb'))
-cluster0_model = pickle.load(open('../Final Models/Cluster_0_logreg_pipeline.pkl', 'rb'))
-# cluster1_model = pickle.load(open('../Final Models/Cluster_1_NN_pipeline.pkl', 'rb'))
-cluster1_model = pickle.load(open('../Final Models/Cluster_0_logreg_pipeline.pkl', 'rb')) # TODO
-cluster2_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb'))
-# cluster3_model = pickle.load(open('../Final Models/Cluster_3_NN_pipeline.pkl', 'rb'))
-cluster3_model = pickle.load(open('../Final Models/Cluster_4_logreg_pipeline.pkl', 'rb')) # TODO
-cluster4_model = pickle.load(open('../Final Models/Cluster_4_logreg_pipeline.pkl', 'rb'))
-cluster5_model = pickle.load(open('../Final Models/Cluster_5_RF_pipeline.pkl', 'rb'))
+kmeans_model = pickle.load(open(os.path.join(dir_path, 'Kmeans_pipeline.pkl'), 'rb'))
+cluster0_model = pickle.load(open(os.path.join(dir_path, 'Cluster_0_logreg_pipeline.pkl'), 'rb'))
+# cluster1_model = pickle.load(open('Cluster_1_NN_pipeline.pkl', 'rb'))
+cluster1_model = pickle.load(open(os.path.join(dir_path, 'Cluster_0_logreg_pipeline.pkl'), 'rb')) # TODO
+cluster2_model = pickle.load(open(os.path.join(dir_path, 'Cluster_2_RF_pipeline.pkl'), 'rb'))
+# cluster3_model = pickle.load(open('Cluster_3_NN_pipeline.pkl', 'rb'))
+cluster3_model = pickle.load(open(os.path.join(dir_path, 'Cluster_4_logreg_pipeline.pkl'), 'rb')) # TODO
+cluster4_model = pickle.load(open(os.path.join(dir_path, 'Cluster_4_logreg_pipeline.pkl'), 'rb'))
+cluster5_model = pickle.load(open(os.path.join(dir_path, 'Cluster_5_RF_pipeline.pkl'), 'rb'))
 
 # Defining the model input types
 class Patient(BaseModel):
@@ -118,4 +122,4 @@ async def get_predict(data: Patient):
     }
 
 if __name__ == '__main__':
-    uvicorn.run(app, port=8080, host='0.0.0.0')
+    uvicorn.run(app, port=8000, host='0.0.0.0')
