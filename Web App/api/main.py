@@ -6,14 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Basic API configurations
 app = FastAPI()
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:3000",
-]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -22,15 +17,17 @@ app.add_middleware(
 # Retrieve and deserialize all models
 kmeans_model = pickle.load(open('../Final Models/Kmeans_pipeline.pkl', 'rb'))
 cluster0_model = pickle.load(open('../Final Models/Cluster_0_logreg_pipeline.pkl', 'rb'))
-cluster1_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb')) # TODO
+# cluster1_model = pickle.load(open('../Final Models/Cluster_1_NN_pipeline.pkl', 'rb'))
+cluster1_model = pickle.load(open('../Final Models/Cluster_0_logreg_pipeline.pkl', 'rb')) # TODO
 cluster2_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb'))
-cluster3_model = pickle.load(open('../Final Models/Cluster_2_RF_pipeline.pkl', 'rb')) # TODO
+# cluster3_model = pickle.load(open('../Final Models/Cluster_3_NN_pipeline.pkl', 'rb'))
+cluster3_model = pickle.load(open('../Final Models/Cluster_4_logreg_pipeline.pkl', 'rb')) # TODO
 cluster4_model = pickle.load(open('../Final Models/Cluster_4_logreg_pipeline.pkl', 'rb'))
 cluster5_model = pickle.load(open('../Final Models/Cluster_5_RF_pipeline.pkl', 'rb'))
 
 # Defining the model input types
 class Patient(BaseModel):
-    age: int
+    age: float
     gender: int
     height: float
     weight: float
