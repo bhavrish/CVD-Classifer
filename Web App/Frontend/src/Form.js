@@ -16,6 +16,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Link from '@material-ui/core/Link';
 import axios from 'axios'
 
 const useStyles = makeStyles(theme => ({
@@ -28,12 +30,28 @@ const useStyles = makeStyles(theme => ({
 
     '& .MuiFormControl-root': {
       margin: theme.spacing(1),
-      width: '450px',
+      [theme.breakpoints.up('lg')]: {
+        width: '35%',
+      },
+      [theme.breakpoints.between('sm', 'md')]: {
+        width: '62.5%',
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '90%',
+      },
       height: '50px'
     },
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: '450px',
+      [theme.breakpoints.up('lg')]: {
+        width: '35%',
+      },
+      [theme.breakpoints.between('sm', 'md')]: {
+        width: '62.5%',
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: '90%',
+      },
       height: '50px'
     },
     '& .MuiButtonBase-root': {
@@ -47,7 +65,9 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: '70%',
+  overflow: "scroll",
+  height:'80%', // added scroll
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
@@ -85,6 +105,11 @@ const Form = ({ handleClose }) => {
   const [alco, setAlco] = useState('');
   const [active, setActive] = useState('');
 
+  // Loading state
+  const [loading, setLoading] = useState(false);
+  const activateLoading = () => setLoading(true);
+  const deactivateLoading = () => setLoading(false);
+
   // Response state
   const [cluster, setCluster] = useState('');
   const [prediction, setPrediction] = useState('');
@@ -96,6 +121,7 @@ const Form = ({ handleClose }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
+    activateLoading() // Show loading icon
 
     // Conversions
     var age = unconvertedAge * 365 // years -> days
@@ -107,12 +133,14 @@ const Form = ({ handleClose }) => {
 
     // Backend call
     axios
-      .post('http://localhost:8000/predict', params)
+      .post('https://cardiovascular-api.herokuapp.com/predict', params)
       .then((res) => {
         const data = res.data.data
         
         setCluster(data.cluster)
         setPrediction(data.prediction)
+
+        deactivateLoading() // Hide loading icon
         openModal()
       })
       .catch((error) => alert(`Error: ${error.message}`))
@@ -260,6 +288,17 @@ const Form = ({ handleClose }) => {
           Predict
         </Button>
       </div>
+
+      {/* Progress bar */}
+      {loading ? <CircularProgress /> : <span />}
+
+      {/* Footer */}
+      <br />
+      <Typography variant="caption">
+        For more information about our research, please visit
+        <br />
+        <Link href="https://github.com/bhavrish/CVD-Classifer">https://github.com/bhavrish/CVD-Classifer</Link>
+      </Typography>
 
       {/* Response modal */}
       <Modal
